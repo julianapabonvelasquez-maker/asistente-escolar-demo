@@ -1,0 +1,57 @@
+[
+    {
+        "id": "DEMO-001",
+        "estudiante": "Estudiante A",
+        "materia": "Matemáticas",
+        "seccion": "Guías didácticas",
+        "tipo": "Examen",
+        "actividad": "Evaluación de fracciones",
+        "fecha": "2026-11-16",
+        "estado": "Pendiente",
+        "fuente": "Publicación ficticia"
+    },
+    {
+        "id": "DEMO-002",
+        "estudiante": "Estudiante B",
+        "materia": "Science",
+        "seccion": "Tareas",
+        "tipo": "Entrega",
+        "actividad": "Trabajo sobre ecosistemas",
+        "fecha": "2026-11-17",
+        "estado": "Pendiente",
+        "fuente": "Publicación ficticia"
+    },
+    {
+        "id": "DEMO-003",
+        "estudiante": "Estudiante A",
+        "materia": "Religión",
+        "seccion": "Actividades de profundización",
+        "tipo": "Examen",
+        "actividad": "Quiz sobre la Alianza en el Sinaí",
+        "fecha": "2026-11-19",
+        "estado": "Pendiente",
+        "fuente": "Publicación ficticia"
+    },
+    {
+        "id": "DEMO-004",
+        "estudiante": "Estudiante B",
+        "materia": "English",
+        "seccion": "Planes de mejoramiento",
+        "tipo": "Entrega",
+        "actividad": "Guía de verbos irregulares",
+        "fecha": "2026-11-20",
+        "estado": "Pendiente",
+        "fuente": "Publicación ficticia"
+    },
+    {
+        "id": "DEMO-005",
+        "estudiante": "Estudiante A",
+        "materia": "Science",
+        "seccion": "Tareas",
+        "tipo": "Entrega",
+        "actividad": "Informe sobre el ciclo del agua",
+        "fecha": "2026-11-21",
+        "estado": "Pendiente",
+        "fuente": "Publicación ficticia"
+    }
+]
