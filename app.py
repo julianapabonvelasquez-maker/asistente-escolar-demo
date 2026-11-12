@@ -1,117 +1,128 @@
 
-import json
+# PASO 57 - Incorporar resumen del domingo a Streamlit
+# Asistente Escolar IA V0.0
+# Datos ficticios y sin conexión a Phidias
+
 from pathlib import Path
-from datetime import date
-from html import escape
+import ast
+import shutil
 
-import pandas as pd
-import streamlit as st
-
-st.set_page_config(
-    page_title="Mi semana escolar",
-    page_icon="📚",
-    layout="wide"
+proyecto_p57 = Path(
+    "/content/drive/MyDrive/Asistente_Escolar_IA"
 )
 
-CARPETA = Path(__file__).resolve().parent
-ARCHIVO = CARPETA / "datos_demo.json"
+archivo_p57 = proyecto_p57 / "demo_publica/app.py"
 
-st.markdown("""
-<style>
-.stApp {
-    background-color: #FCFBFF;
-}
-h1, h2, h3 {
-    color: #463D69;
-}
-div[data-testid="stMetric"] {
-    background: #F0ECFA;
-    padding: 18px;
-    border-radius: 15px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-st.title("📚 Mi semana escolar")
-st.markdown("**Tu familia, organizada en un solo lugar.**")
-st.caption("Asistente Escolar IA V0.0 · Datos ficticios")
-st.info("Demostración sin conexión a Phidias.")
-
-with ARCHIVO.open("r", encoding="utf-8") as archivo:
-    actividades = json.load(archivo)
-
-datos = pd.DataFrame(actividades)
-
-estudiantes = ["Todos"] + sorted(
-    datos["estudiante"].unique().tolist()
+respaldo_p57 = (
+    proyecto_p57 /
+    "copias_seguridad/app_antes_resumen_p57.py.bak"
 )
 
-estudiante = st.selectbox(
-    "¿De quién quieres consultar las actividades?",
-    estudiantes
-)
+if not archivo_p57.is_file():
+    print("⚠️ No se encontró app.py.")
 
-if estudiante == "Todos":
-    filtrados = datos.copy()
 else:
-    filtrados = datos[
-        datos["estudiante"] == estudiante
-    ].copy()
+    codigo_p57 = archivo_p57.read_text(
+        encoding="utf-8"
+    )
 
-filtrados = filtrados.sort_values("fecha")
+    marcador_p57 = 'st.divider()'
 
-col1, col2, col3 = st.columns(3)
+    bloque_p57 = '''
+# PASO 57 - Resumen automático del domingo
 
-col1.metric("📚 Actividades", len(filtrados))
-col2.metric(
-    "📝 Exámenes",
-    int((filtrados["tipo"] == "Examen").sum())
-)
-col3.metric(
-    "📦 Entregas",
-    int((filtrados["tipo"] == "Entrega").sum())
-)
+st.subheader("✨ Tu resumen del domingo")
 
-st.divider()
+for nombre in sorted(filtrados["estudiante"].unique()):
 
-st.subheader("📅 Actividades de la semana")
-st.caption("16 al 22 de noviembre de 2026")
+    actividades_hijo = filtrados[
+        filtrados["estudiante"] == nombre
+    ].sort_values("fecha")
 
-for _, actividad in filtrados.iterrows():
+    examenes = actividades_hijo[
+        actividades_hijo["tipo"] == "Examen"
+    ]
 
-    fecha = date.fromisoformat(actividad["fecha"])
-    fecha_legible = fecha.strftime("%d/%m/%Y")
+    entregas = actividades_hijo[
+        actividades_hijo["tipo"] == "Entrega"
+    ]
 
-    if actividad["tipo"] == "Examen":
-        icono = "📝"
-        etiqueta = "EXAMEN"
-    else:
-        icono = "📦"
-        etiqueta = "ENTREGA"
+    partes = [
+        f"Tiene {len(examenes)} exámenes y "
+        f"{len(entregas)} entregas esta semana."
+    ]
+
+    if not examenes.empty:
+        primero = examenes.iloc[0]
+        fecha = date.fromisoformat(primero["fecha"])
+
+        partes.append(
+            f"Su primer examen es de "
+            f"{primero['materia']} el "
+            f"{fecha.strftime('%d/%m/%Y')}. "
+            "Conviene preparar el repaso con anticipación."
+        )
+
+    if not entregas.empty:
+        primera = entregas.iloc[0]
+        fecha = date.fromisoformat(primera["fecha"])
+
+        partes.append(
+            f"Su primera entrega es de "
+            f"{primera['materia']} el "
+            f"{fecha.strftime('%d/%m/%Y')}. "
+            "Es importante revisar que esté terminada."
+        )
 
     with st.container(border=True):
-        st.markdown(
-            f"### {icono} {escape(str(actividad['actividad']))}"
-        )
-
-        st.write(
-            f"**{etiqueta}** · "
-            f"{escape(str(actividad['materia']))}"
-        )
-
-        st.write(
-            f"📅 {fecha_legible} · "
-            f"👤 {escape(str(actividad['estudiante']))}"
-        )
-
-        st.caption(
-            "Fuente de prueba: " +
-            str(actividad["seccion"])
-        )
-
-st.divider()
+        st.markdown(f"**👤 {nombre}**")
+        st.write(" ".join(partes))
 
 st.caption(
-    "La aplicación organiza actividades. "
-    "No resuelve tareas ni presenta evaluaciones."
+    "Resumen automático basado en datos ficticios. "
+    "No interpreta todavía publicaciones completas."
 )
+
+'''
+
+    if 'st.subheader("✨ Tu resumen del domingo")' in codigo_p57:
+        print("ℹ️ El resumen ya existe en app.py.")
+        print("No se duplicó el código.")
+        print("✅ PASO 57 COMPLETADO")
+
+    elif marcador_p57 not in codigo_p57:
+        print("⚠️ No encontramos el punto de inserción.")
+        print("No se modificó app.py.")
+
+    else:
+        # Guardar respaldo fuera de la carpeta pública
+        respaldo_p57.parent.mkdir(
+            parents=True, exist_ok=True
+        )
+
+        if not respaldo_p57.exists():
+            shutil.copy2(archivo_p57, respaldo_p57)
+
+        # Insertar antes del primer separador
+        codigo_nuevo_p57 = codigo_p57.replace(
+            marcador_p57,
+            bloque_p57 + marcador_p57,
+            1
+        )
+
+        # Validar sintaxis antes de guardar
+        ast.parse(codigo_nuevo_p57)
+
+        archivo_p57.write_text(
+            codigo_nuevo_p57,
+            encoding="utf-8"
+        )
+
+        print("🏫 ASISTENTE ESCOLAR IA V0.0")
+        print("✨ RESUMEN DEL DOMINGO INCORPORADO")
+        print("=" * 45)
+        print("✅ Código Python validado")
+        print("✅ Respaldo creado")
+        print("✅ Tarjetas y filtros conservados")
+        print("✅ Archivo actualizado:", archivo_p57.name)
+        print("✅ PASO 57 COMPLETADO")
